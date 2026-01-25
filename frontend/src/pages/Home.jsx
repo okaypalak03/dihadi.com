@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import WorkerCard from '../components/WorkerCard';
+import API_BASE from '../config/api.js';
 
 const Home = () => {
   const [workers, setWorkers] = useState([]);
@@ -9,7 +10,7 @@ const Home = () => {
   useEffect(() => {
     const fetchWorkers = async () => {
       try {
-        const { data } = await axios.get(`http://localhost:5000/api/workers?area=${area}`);
+        const { data } = await axios.get(`${API_BASE}/workers?area=${area}`);
         setWorkers(data);
       } catch (error) {
         console.error('Error fetching workers:', error);

@@ -4,8 +4,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
 import ProfilePhotoUpload from '../components/ProfilePhotoUpload.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
-
-const API = 'http://localhost:5000/api';
+import API_BASE from '../config/api.js';
 
 const UserDashboard = () => {
   const [jobs, setJobs] = useState([]);
@@ -30,7 +29,7 @@ const UserDashboard = () => {
     const fetchJobs = async () => {
       if (!user) return;
       try {
-        const { data } = await axios.get(`${API}/jobs`, { headers: headers() });
+        const { data } = await axios.get(`${API_BASE}/jobs`, { headers: headers() });
         setJobs(data);
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -39,7 +38,7 @@ const UserDashboard = () => {
     const fetchUserProfile = async () => {
       if (!user) return;
       try {
-        const { data } = await axios.get(`${API}/auth/me`, { headers: headers() });
+        const { data } = await axios.get(`${API_BASE}/auth/me`, { headers: headers() });
         setProfile({
           name: data.name || '',
           address: data.address || '',
@@ -62,7 +61,7 @@ const UserDashboard = () => {
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.put(`${API}/users/profile`, profile, { headers: headers() });
+      const { data } = await axios.put(`${API_BASE}/users/profile`, profile, { headers: headers() });
       setUser(data);
       setShowProfileForm(false);
       alert('Profile updated successfully!');
@@ -75,7 +74,7 @@ const UserDashboard = () => {
   const handlePhotoUpdate = async (base64OrNull) => {
     try {
       const { data } = await axios.put(
-        `${API}/users/profile`,
+        `${API_BASE}/users/profile`,
         { profilePhoto: base64OrNull ?? null },
         { headers: headers() }
       );
@@ -91,7 +90,7 @@ const UserDashboard = () => {
 
   const handleRemoveJobConfirm = async () => {
     const jobId = removeModalJobId;
-    await axios.delete(`${API}/jobs/${jobId}`, { headers: headers() });
+    await axios.delete(`${API_BASE}/jobs/${jobId}`, { headers: headers() });
     setJobs((prev) => prev.filter((j) => j._id !== jobId));
   };
 

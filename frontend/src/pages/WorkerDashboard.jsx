@@ -5,8 +5,7 @@ import { AuthContext } from '../context/AuthContext.jsx';
 import ProfilePhotoUpload from '../components/ProfilePhotoUpload.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
 import { handleCurrencyInputChange, handleTimeInputChange } from '../utils/inputFormatters.js';
-
-const API = 'http://localhost:5000/api';
+import API_BASE from '../config/api.js';
 
 const WorkerDashboard = () => {
   const [jobs, setJobs] = useState([]);
@@ -35,7 +34,7 @@ const WorkerDashboard = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const { data } = await axios.get(`${API}/jobs`, { headers: headers() });
+        const { data } = await axios.get(`${API_BASE}/jobs`, { headers: headers() });
         setJobs(data);
       } catch (error) {
         console.error('Error fetching jobs:', error);
@@ -43,7 +42,7 @@ const WorkerDashboard = () => {
     };
     const fetchWorkerProfile = async () => {
       try {
-        const { data } = await axios.get(`${API}/workers/me`, { headers: headers() });
+        const { data } = await axios.get(`${API_BASE}/workers/me`, { headers: headers() });
         if (data) {
           setProfile({
             workTiming: data.workTiming || '',
@@ -57,7 +56,7 @@ const WorkerDashboard = () => {
     };
     const fetchUserProfile = async () => {
       try {
-        const { data } = await axios.get(`${API}/auth/me`, { headers: headers() });
+        const { data } = await axios.get(`${API_BASE}/auth/me`, { headers: headers() });
         setPersonal({
           name: data.name || '',
           address: data.address || '',
@@ -78,7 +77,7 @@ const WorkerDashboard = () => {
 
   const handleStatusChange = async (jobId, status) => {
     try {
-      await axios.put(`${API}/jobs/${jobId}`, { status }, { headers: headers() });
+      await axios.put(`${API_BASE}/jobs/${jobId}`, { status }, { headers: headers() });
       setJobs((prev) =>
         prev.map((j) => (j._id === jobId ? { ...j, status } : j))
       );
@@ -91,7 +90,7 @@ const WorkerDashboard = () => {
 
   const handleRemoveJobConfirm = async () => {
     const jobId = removeModalJobId;
-    await axios.delete(`${API}/jobs/${jobId}`, { headers: headers() });
+    await axios.delete(`${API_BASE}/jobs/${jobId}`, { headers: headers() });
     setJobs((prev) => prev.filter((j) => j._id !== jobId));
   };
 
@@ -118,7 +117,7 @@ const WorkerDashboard = () => {
   const handleProfileSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API}/workers`, profile, { headers: headers() });
+      await axios.post(`${API_BASE}/workers`, profile, { headers: headers() });
       alert('Profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -129,7 +128,7 @@ const WorkerDashboard = () => {
   const handlePersonalSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.put(`${API}/users/profile`, personal, { headers: headers() });
+      const { data } = await axios.put(`${API_BASE}/users/profile`, personal, { headers: headers() });
       setUser(data);
       setShowPersonalForm(false);
       alert('Personal details updated successfully!');
@@ -142,7 +141,7 @@ const WorkerDashboard = () => {
   const handlePhotoUpdate = async (base64OrNull) => {
     try {
       const { data } = await axios.put(
-        `${API}/users/profile`,
+        `${API_BASE}/users/profile`,
         { profilePhoto: base64OrNull ?? null },
         { headers: headers() }
       );

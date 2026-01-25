@@ -113,6 +113,14 @@ Vite dev server runs (typically `http://localhost:5173`). The app calls the back
 - `npm run preview` — Preview production build
 - `npm run lint` — ESLint
 
+## Deployment
+
+To deploy on **Render.com**, see **[DEPLOY.md](./DEPLOY.md)**. It covers:
+
+- Deploying the backend as a **Web Service**
+- Deploying the frontend as a **Static Site**
+- MongoDB Atlas, env vars (`MONGODB_URI`, `JWT_SECRET`, `VITE_API_URL`), and troubleshooting
+
 ## License
 
 ISC

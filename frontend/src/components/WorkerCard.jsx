@@ -3,8 +3,7 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { formatChargesDisplay } from '../utils/inputFormatters.js';
 import HireModal from './HireModal.jsx';
-
-const API = 'http://localhost:5000/api';
+import API_BASE from '../config/api.js';
 
 const WorkerCard = ({ worker }) => {
   const { user } = useContext(AuthContext);
@@ -18,7 +17,7 @@ const WorkerCard = ({ worker }) => {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `${API}/jobs`,
+        `${API_BASE}/jobs`,
         { workerId: worker._id, description, requiredTime },
         { headers: { 'x-auth-token': token } }
       );
