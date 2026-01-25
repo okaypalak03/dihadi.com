@@ -76,7 +76,12 @@ This guide walks you through deploying the **backend** (Node/Express API) and **
    |-----|--------|
    | `VITE_API_URL` | `https://dihadi-api.onrender.com/api` |
 
-   Replace `dihadi-api` with your **actual** backend service name from Part 1. It must include `/api` at the end.
+   Replace `dihadi-api` with your **actual** backend service name from Part 1.
+
+   **`VITE_API_URL` must end with `/api`.**  
+   - Wrong: `https://dihadi-com-backend.onrender.com` → requests go to `/auth/login` and 404.  
+   - Correct: `https://dihadi-com-backend.onrender.com/api` → requests go to `/api/auth/login`.  
+   After changing it, **redeploy** the Static Site (new build required).
 
 5. **Create Static Site**  
    Click **Create Static Site**. Render will install deps, run `npm run build` (which uses `VITE_API_URL`), and publish the `dist` folder.
@@ -125,4 +130,5 @@ This guide walks you through deploying the **backend** (Node/Express API) and **
 - **CORS errors** – The backend uses `cors()` with no origin restriction, so all origins are allowed. If you lock CORS down later, add your Render frontend URL.
 - **“Cannot connect to MongoDB”** – Confirm `MONGODB_URI` is correct, Atlas IP allowlist includes `0.0.0.0/0`, and the user has read/write access to the DB.
 - **Frontend 404 on `/login`, `/user-dashboard`, etc.** – Add a **Rewrite** rule: Source `/*`, Destination `/index.html`. See [Part 2, step 6](#6-add-spa-rewrite-rule-required) and [Render’s redirects/rewrites docs](https://render.com/docs/redirects-rewrites).
+- **“Login failed” / 404 on `/auth/login`, `/auth/register`, or other API calls** – `VITE_API_URL` must be the backend base **including** `/api` (e.g. `https://dihadi-com-backend.onrender.com/api`). If you used the root URL, fix it in the Static Site env vars, then **redeploy** the frontend so the new value is baked into the build.
 - **Backend spin-down (free tier)** – The first request after idle can be slow. Use “Always-on” or another plan to avoid it.
