@@ -81,14 +81,22 @@ This guide walks you through deploying the **backend** (Node/Express API) and **
 5. **Create Static Site**  
    Click **Create Static Site**. Render will install deps, run `npm run build` (which uses `VITE_API_URL`), and publish the `dist` folder.
 
-6. **Frontend URL**  
+6. **Add SPA rewrite rule (required)**  
+   Direct visits or refreshes to `/login`, `/user-dashboard`, etc. will 404 unless you tell Render to serve `index.html` for all paths. In your **Static Site** → **Settings** → **Redirects/Rewrites**:
+
+   - Click **Add Rule**.
+   - **Type:** Rewrite.
+   - **Source:** `/*`
+   - **Destination:** `/index.html`
+
+   Save. This makes React Router handle routing; the URL stays the same (e.g. `/login`) but the content comes from `index.html`.
+
+7. **Frontend URL**  
    After deploy, you’ll get a URL like:
    ```
    https://dihadi-web.onrender.com
    ```
-
-7. **Client-side routing (SPA)**  
-   React Router uses client-side routes (`/login`, `/user-dashboard`, etc.). Render’s Static Site serves `index.html` for all paths by default, so routes should work without extra config. If you ever see 404s on refresh, check Render’s “Rewrite” / “Redirect” options for SPAs.
+   Test `/login` and other routes directly; they should no longer 404.
 
 ---
 
@@ -116,5 +124,5 @@ This guide walks you through deploying the **backend** (Node/Express API) and **
 - **`nodemon: Permission denied` / `Exited with status 127`** – The backend `start` script must use `node index.js`, not `nodemon`. The repo is configured this way; ensure you haven’t overridden the start command on Render.
 - **CORS errors** – The backend uses `cors()` with no origin restriction, so all origins are allowed. If you lock CORS down later, add your Render frontend URL.
 - **“Cannot connect to MongoDB”** – Confirm `MONGODB_URI` is correct, Atlas IP allowlist includes `0.0.0.0/0`, and the user has read/write access to the DB.
-- **Frontend 404 on refresh** – Ensure the static site is set up as an SPA (all routes → `index.html`).
+- **Frontend 404 on `/login`, `/user-dashboard`, etc.** – Add a **Rewrite** rule: Source `/*`, Destination `/index.html`. See [Part 2, step 6](#6-add-spa-rewrite-rule-required) and [Render’s redirects/rewrites docs](https://render.com/docs/redirects-rewrites).
 - **Backend spin-down (free tier)** – The first request after idle can be slow. Use “Always-on” or another plan to avoid it.
