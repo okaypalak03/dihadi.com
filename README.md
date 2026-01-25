@@ -68,7 +68,7 @@ JWT_SECRET=<your_jwt_secret>
 Start the API:
 
 ```bash
-npm start
+npm run dev
 ```
 
 Runs with **nodemon** on `http://localhost:5000`. API base: `http://localhost:5000/api`.
@@ -85,7 +85,7 @@ Vite dev server runs (typically `http://localhost:5173`). The app calls the back
 
 ### 3. Run both
 
-1. Start **backend** first (`cd backend && npm start`).
+1. Start **backend** first (`cd backend && npm run dev`).
 2. Start **frontend** in another terminal (`cd frontend && npm run dev`).
 3. Open the frontend URL in your browser.
 
@@ -103,8 +103,8 @@ Vite dev server runs (typically `http://localhost:5173`). The app calls the back
 
 **Backend** (`backend/package.json`):
 
-- `npm start` — Run with nodemon
-- `npm run server` — Run with plain `node`
+- `npm start` — Run with `node` (production, e.g. Render)
+- `npm run dev` — Run with nodemon (local development)
 
 **Frontend** (`frontend/package.json`):
 

@@ -113,6 +113,7 @@ This guide walks you through deploying the **backend** (Node/Express API) and **
 
 ## Troubleshooting
 
+- **`nodemon: Permission denied` / `Exited with status 127`** – The backend `start` script must use `node index.js`, not `nodemon`. The repo is configured this way; ensure you haven’t overridden the start command on Render.
 - **CORS errors** – The backend uses `cors()` with no origin restriction, so all origins are allowed. If you lock CORS down later, add your Render frontend URL.
 - **“Cannot connect to MongoDB”** – Confirm `MONGODB_URI` is correct, Atlas IP allowlist includes `0.0.0.0/0`, and the user has read/write access to the DB.
 - **Frontend 404 on refresh** – Ensure the static site is set up as an SPA (all routes → `index.html`).
