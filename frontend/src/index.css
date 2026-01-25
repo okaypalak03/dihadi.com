@@ -1,0 +1,157 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: rgb(255 251 235 / 0.8);
+    @apply text-stone-800 antialiased font-sans;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold
+      bg-gradient-to-r from-orange-500 to-amber-500 text-white
+      shadow-md
+      hover:from-orange-600 hover:to-amber-600 hover:shadow-lg
+      active:scale-[0.98] transition-all duration-200;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-semibold
+      bg-white text-orange-600 border-2 border-orange-400
+      hover:bg-orange-50 hover:border-orange-500
+      active:scale-[0.98] transition-all duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border-2 border-amber-200 bg-white
+      placeholder:text-stone-400
+      focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400
+      transition-all duration-200;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-md border border-amber-100
+      hover:shadow-lg hover:border-orange-200
+      transition-all duration-300;
+  }
+
+  .page-container {
+    @apply min-h-[calc(100vh-4rem)] mx-auto px-4 py-8 max-w-6xl;
+  }
+
+  .heading-1 {
+    @apply text-3xl md:text-4xl font-bold tracking-tight text-stone-800;
+  }
+
+  .heading-2 {
+    @apply text-xl md:text-2xl font-bold text-stone-800;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-gradient-to-r from-orange-500 via-amber-500 to-rose-500 bg-clip-text text-transparent;
+  }
+}
+
+/* Hire modal – styled popup (no browser alert/prompt) */
+.hire-modal-overlay {
+  @apply fixed inset-0 z-[100] flex items-center justify-center p-4;
+  background: rgba(28, 25, 23, 0.6);
+  backdrop-filter: blur(4px);
+  animation: hire-modal-fade-in 0.2s ease-out;
+}
+
+.hire-modal-dialog {
+  @apply w-full max-w-md bg-white rounded-2xl shadow-xl border border-amber-100 overflow-hidden;
+  animation: hire-modal-scale-in 0.25s ease-out;
+}
+
+.hire-modal-header {
+  @apply flex items-center justify-between px-6 py-4 border-b border-amber-100 bg-gradient-to-r from-amber-50 to-orange-50;
+}
+
+.hire-modal-title {
+  @apply text-xl font-bold text-stone-800;
+}
+
+.hire-modal-close {
+  @apply w-10 h-10 flex items-center justify-center rounded-xl text-2xl font-light text-stone-500 hover:bg-amber-100 hover:text-stone-800 transition-colors;
+}
+
+.hire-modal-body {
+  @apply px-6 py-5 space-y-4;
+}
+
+.hire-modal-label {
+  @apply block text-sm font-medium text-stone-700 mb-1.5;
+}
+
+.hire-modal-msg {
+  @apply px-4 py-3 rounded-xl text-sm font-medium;
+}
+
+.hire-modal-msg-success {
+  @apply bg-emerald-50 text-emerald-800 border border-emerald-200;
+}
+
+.hire-modal-msg-error {
+  @apply bg-rose-50 text-rose-800 border border-rose-200;
+}
+
+.hire-modal-actions {
+  @apply flex gap-3 pt-2 justify-end;
+}
+
+@keyframes hire-modal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes hire-modal-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Confirm modal – styled popup (no browser confirm) */
+.confirm-modal-overlay {
+  @apply fixed inset-0 z-[100] flex items-center justify-center p-4;
+  background: rgba(28, 25, 23, 0.6);
+  backdrop-filter: blur(4px);
+  animation: hire-modal-fade-in 0.2s ease-out;
+}
+
+.confirm-modal-dialog {
+  @apply w-full max-w-md bg-white rounded-2xl shadow-xl border border-amber-100 overflow-hidden;
+  animation: hire-modal-scale-in 0.25s ease-out;
+}
+
+.confirm-modal-header {
+  @apply flex items-center justify-between px-6 py-4 border-b border-amber-100 bg-gradient-to-r from-amber-50 to-orange-50;
+}
+
+.confirm-modal-title {
+  @apply text-xl font-bold text-stone-800;
+}
+
+.confirm-modal-close {
+  @apply w-10 h-10 flex items-center justify-center rounded-xl text-2xl font-light text-stone-500 hover:bg-amber-100 hover:text-stone-800 transition-colors disabled:opacity-50;
+}
+
+.confirm-modal-body {
+  @apply px-6 py-5 space-y-4;
+}
+
+.confirm-modal-msg {
+  @apply px-4 py-3 rounded-xl text-sm font-medium;
+}
+
+.confirm-modal-msg-error {
+  @apply bg-rose-50 text-rose-800 border border-rose-200;
+}
+
+.confirm-modal-actions {
+  @apply flex gap-3 pt-2 justify-end;
+}
+
