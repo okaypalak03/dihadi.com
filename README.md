@@ -1,75 +1,118 @@
-# bihari.com
+# dihadi.com
 
-## Project Overview
-
-bihari.com is a web application that connects users with local workers for various services. It's a Zomato/Swiggy-style platform where users can hire workers instead of ordering food.
+A web application that connects users with local workers for various services. Think Zomato/Swiggy-style platform—but for hiring workers instead of ordering food.
 
 ## Tech Stack
 
-- **Frontend:** React.js
-- **Backend:** Node.js, Express.js
-- **Database:** MongoDB
-- **Authentication:** JWT (JSON Web Tokens)
+| Layer | Technologies |
+|-------|--------------|
+| **Frontend** | React 19, Vite 7, Tailwind CSS 4, React Router 7, Axios |
+| **Backend** | Node.js, Express 5, ES Modules |
+| **Database** | MongoDB (Mongoose) |
+| **Auth** | JWT (JSON Web Tokens), bcryptjs |
 
-## Core Features
+## Features
 
-- **Worker Profiles:** Workers can create and manage their profiles, including their skills, availability, and charges.
-- **Area-Based Search:** Users can find workers based on their location.
-- **Hiring Flow:** A simple "Add to Hire" system for booking workers.
-- **Job Management:** Track the status of jobs (Pending, Accepted, Completed).
-- **Mock Payments:** A simulated payment flow for completed jobs.
-- **User Roles:** Separate roles for Users, Workers, and Administrators.
+- **Worker profiles** — Workers create and manage profiles with skills, availability, and charges
+- **Area-based search** — Find workers by location
+- **Hiring flow** — “Add to Hire”–style booking
+- **Job lifecycle** — Track status: Pending → Accepted → Completed
+- **Mock payments** — Simulated payment flow for completed jobs
+- **Role-based access** — Separate dashboards for **Users**, **Workers**, and **Admins**
+- **Profile photos** — Upload and display worker photos
 
 ## Project Structure
 
 ```
-bihari.com/
-├── backend/        # Node.js/Express.js backend
-├── database/       # MongoDB scripts/schemas
-├── frontend/       # React.js frontend
-└── README.md       # This file
+dihadi.com/
+├── backend/           # Express API
+│   ├── config/        # DB connection
+│   ├── controllers/   # Auth, users, workers, jobs, admin
+│   ├── middleware/    # Auth & JWT
+│   ├── models/        # Mongoose schemas
+│   ├── routes/        # API routes
+│   └── index.js       # Entry point
+├── frontend/          # React + Vite app
+│   ├── public/
+│   └── src/
+│       ├── components/   # UI (Navbar, Footer, modals, etc.)
+│       ├── context/      # AuthContext
+│       ├── pages/        # Home, Login, Register, dashboards
+│       └── utils/
+└── README.md
 ```
 
-## Setup and Installation
+## Prerequisites
 
-### Prerequisites
+- **Node.js** (v18+)
+- **npm**
+- **MongoDB** (local or Atlas)
 
-- Node.js
-- npm
-- MongoDB
+## Setup
 
-### Backend Setup
+### 1. Backend
 
-1.  Navigate to the `backend` directory:
-    ```bash
-    cd backend
-    ```
-2.  Install the dependencies:
-    ```bash
-    npm install
-    ```
-3.  Create a `.env` file and add the following environment variables:
-    ```
-    PORT=5000
-    MONGODB_URI=<your_mongodb_connection_string>
-    JWT_SECRET=<your_jwt_secret>
-    ```
-4.  Start the backend server:
-    ```bash
-    npm start
-    ```
+```bash
+cd backend
+npm install
+```
 
-### Frontend Setup
+Create a `.env` file in `backend/`:
 
-1.  Navigate to the `frontend` directory:
-    ```bash
-    cd frontend
-    ```
-2.  Install the dependencies:
-    ```bash
-    npm install
-    ```
-3.  Start the frontend development server:
-    ```bash
-    npm run dev
-    ```
+```env
+PORT=5000
+MONGODB_URI=<your_mongodb_connection_string>
+JWT_SECRET=<your_jwt_secret>
+```
+
+Start the API:
+
+```bash
+npm start
+```
+
+Runs with **nodemon** on `http://localhost:5000`. API base: `http://localhost:5000/api`.
+
+### 2. Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Vite dev server runs (typically `http://localhost:5173`). The app calls the backend at `http://localhost:5000/api`.
+
+### 3. Run both
+
+1. Start **backend** first (`cd backend && npm start`).
+2. Start **frontend** in another terminal (`cd frontend && npm run dev`).
+3. Open the frontend URL in your browser.
+
+## API Overview
+
+| Base path | Purpose |
+|-----------|---------|
+| `/api/auth` | Login, register, `/me` |
+| `/api/users` | User profile, etc. |
+| `/api/workers` | Worker CRUD, search by area |
+| `/api/jobs` | Create, update, list jobs |
+| `/api/admin` | Admin-only actions |
+
+## Scripts
+
+**Backend** (`backend/package.json`):
+
+- `npm start` — Run with nodemon
+- `npm run server` — Run with plain `node`
+
+**Frontend** (`frontend/package.json`):
+
+- `npm run dev` — Vite dev server
+- `npm run build` — Production build
+- `npm run preview` — Preview production build
+- `npm run lint` — ESLint
+
+## License
+
+ISC
