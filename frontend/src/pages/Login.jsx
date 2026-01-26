@@ -19,7 +19,10 @@ const Login = () => {
     e.preventDefault();
     try {
       await login(email, password);
-      navigate('/');
+      toast.success('Logged in successfully!');
+      setTimeout(() => {
+        navigate('/workers');
+      }, 500);
     } catch (error) {
       console.error('Login failed', error);
       toast.error('Login failed. Please check your email and password.');

@@ -27,7 +27,10 @@ const Register = () => {
     e.preventDefault();
     try {
       await register(formData);
-      navigate('/');
+      toast.success('Registration successful! Welcome to Dihadi.com');
+      setTimeout(() => {
+        navigate('/workers');
+      }, 500);
     } catch (error) {
       console.error('Registration failed', error);
       toast.error(error?.response?.data?.msg || 'Registration failed. Please try again.');

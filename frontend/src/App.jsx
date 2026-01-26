@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
+import Workers from "./pages/Workers";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import WorkerDashboard from "./pages/WorkerDashboard";
@@ -17,6 +18,7 @@ function App() {
         <main className="flex-1">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/workers" element={<Workers />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
