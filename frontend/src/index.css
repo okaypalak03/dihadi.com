@@ -2,7 +2,6 @@
 
 @layer base {
   body {
-    background-color: rgb(255 251 235 / 0.8);
     @apply text-stone-800 antialiased font-sans;
   }
 }
@@ -24,15 +23,15 @@
   }
 
   .input-field {
-    @apply w-full px-4 py-3 rounded-xl border-2 border-amber-200 bg-white
+    @apply w-full px-4 py-3 rounded-xl border-2 border-amber-200/80 bg-white/95 backdrop-blur-sm
       placeholder:text-stone-400
-      focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400
+      focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 focus:bg-white
       transition-all duration-200;
   }
 
   .card {
-    @apply bg-white rounded-2xl shadow-md border border-amber-100
-      hover:shadow-lg hover:border-orange-200
+    @apply bg-white/95 backdrop-blur-sm rounded-2xl shadow-lg border-2 border-white/30
+      hover:shadow-xl hover:border-white/40
       transition-all duration-300;
   }
 

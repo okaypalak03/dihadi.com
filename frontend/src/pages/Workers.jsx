@@ -20,7 +20,7 @@ const Workers = () => {
   }, [area]);
 
   return (
-    <div className="page-container">
+    <div className="page-container py-8">
       <section>
         <h2 className="heading-2 mb-4">Find workers near you</h2>
         <div className="max-w-2xl mb-8">

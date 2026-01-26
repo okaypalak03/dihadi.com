@@ -3,18 +3,7 @@ import React from 'react';
 const Home = () => {
   return (
     <div className="relative min-h-[calc(100vh-4rem)] flex flex-col">
-      {/* Background image with blur overlay */}
-      <div className="absolute inset-0 z-0">
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=2070&auto=format&fit=crop')`,
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-stone-900/80 via-stone-800/70 to-stone-900/90 backdrop-blur-sm" />
-      </div>
-
-      {/* Content */}
+      {/* Content - background is handled by PageBackground */}
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 py-12 md:py-20 animate-fade-in">
         <div className="max-w-4xl mx-auto text-center">
           {/* Logo/Brand */}

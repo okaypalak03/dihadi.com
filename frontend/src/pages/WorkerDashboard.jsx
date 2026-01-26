@@ -171,7 +171,7 @@ const WorkerDashboard = () => {
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container py-8">
       <header className="mb-10">
         <div className="flex items-center justify-between mb-2">
           <h1 className="heading-1">Worker dashboard</h1>
