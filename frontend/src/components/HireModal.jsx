@@ -65,7 +65,7 @@ const HireModal = ({ isOpen, onClose, workerName, onSubmit, loading }) => {
       setWorkTimeTo('');
       setTimeout(handleClose, 1500);
     } catch (err) {
-      const errorMsg = err?.response?.data?.msg || 'Failed to send request. Make sure you're logged in as a user.';
+      const errorMsg = err?.response?.data?.msg || 'Failed to send request. Make sure you are logged in as a user.';
       if (err?.response?.status === 409) {
         // Conflict - worker is busy
         const conflict = err?.response?.data?.conflict;
