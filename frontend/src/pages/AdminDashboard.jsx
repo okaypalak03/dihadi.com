@@ -2,7 +2,7 @@ import React from 'react';
 
 const AdminDashboard = () => {
   return (
-    <div className="page-container py-8">
+    <div className="page-container">
       <header className="mb-10">
         <h1 className="heading-1 mb-2">Admin dashboard</h1>
         <p className="text-stone-600">

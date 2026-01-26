@@ -28,7 +28,7 @@ export const getWorkers = async (req, res) => {
     // Find all workers
     const allWorkers = await Worker.find(query).populate('user', ['name', 'area', 'contactNumber', 'profilePhoto']);
     
-    // If date/time filters are provided, check for conflicts
+    // If date/time filters are provided, check for conflicts with ACCEPTED jobs only
     let busyWorkerIds = new Set();
     
     if (workDate && workTimeFrom && workTimeTo) {
@@ -36,9 +36,10 @@ export const getWorkers = async (req, res) => {
       const startOfDay = new Date(workDateObj.setHours(0, 0, 0, 0));
       const endOfDay = new Date(workDateObj.setHours(23, 59, 59, 999));
       
-      // Find jobs on the same date with time conflicts
+      // Only check ACCEPTED jobs (not Pending - worker hasn't accepted yet)
+      // Completed jobs don't block availability
       const conflictingJobs = await Job.find({
-        status: { $in: ['Pending', 'Accepted'] },
+        status: 'Accepted', // Only hide if worker has accepted
         workDate: {
           $gte: startOfDay,
           $lt: endOfDay,
@@ -58,16 +59,10 @@ export const getWorkers = async (req, res) => {
           }
         }
       }
-    } else {
-      // If no date/time provided, filter by any active jobs (old behavior)
-      const activeJobs = await Job.find({
-        status: { $in: ['Pending', 'Accepted'] }
-      }).select('worker');
-      
-      activeJobs.forEach(job => busyWorkerIds.add(job.worker.toString()));
     }
+    // If no date/time provided, show all workers (no filtering)
     
-    // Filter out workers with conflicts
+    // Filter out workers with conflicts (only for the specific date/time)
     const availableWorkers = allWorkers.filter(worker => 
       !busyWorkerIds.has(worker._id.toString())
     );

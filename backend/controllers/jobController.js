@@ -16,11 +16,13 @@ export const createJob = async (req, res) => {
       return res.status(400).json({ msg: 'Work date, time from, and time to are required' });
     }
 
-    // Check for date/time conflicts with existing jobs
+    // Check for date/time conflicts with ACCEPTED jobs only
+    // Pending jobs don't block - worker hasn't accepted yet
+    // Completed jobs don't block - worker is available again
     const workDateObj = new Date(workDate);
     const existingJobs = await Job.find({
       worker: workerId,
-      status: { $in: ['Pending', 'Accepted'] },
+      status: 'Accepted', // Only check Accepted jobs
       workDate: {
         $gte: new Date(workDateObj.setHours(0, 0, 0, 0)),
         $lt: new Date(workDateObj.setHours(23, 59, 59, 999)),

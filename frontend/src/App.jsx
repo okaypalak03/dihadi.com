@@ -9,7 +9,6 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
-import PageBackground from "./components/PageBackground";
 
 function App() {
   return (
@@ -17,41 +16,39 @@ function App() {
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-1">
-          <PageBackground>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/workers" element={<Workers />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/workers" element={<Workers />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-              <Route
-                path="/worker-dashboard"
-                element={
-                  <PrivateRoute roles={["Worker"]}>
-                    <WorkerDashboard />
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path="/worker-dashboard"
+              element={
+                <PrivateRoute roles={["Worker"]}>
+                  <WorkerDashboard />
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path="/user-dashboard"
-                element={
-                  <PrivateRoute roles={["User"]}>
-                    <UserDashboard />
-                  </PrivateRoute>
-                }
-              />
+            <Route
+              path="/user-dashboard"
+              element={
+                <PrivateRoute roles={["User"]}>
+                  <UserDashboard />
+                </PrivateRoute>
+              }
+            />
 
-              <Route
-                path="/admin-dashboard"
-                element={
-                  <PrivateRoute roles={["Admin"]}>
-                    <AdminDashboard />
-                  </PrivateRoute>
-                }
-              />
-            </Routes>
-          </PageBackground>
+            <Route
+              path="/admin-dashboard"
+              element={
+                <PrivateRoute roles={["Admin"]}>
+                  <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
         </main>
         <Footer />
       </div>

@@ -30,9 +30,9 @@ const Login = () => {
   };
 
   return (
-    <div className="page-container flex flex-col items-center justify-center min-h-[calc(100vh-4rem)] py-8">
+    <div className="page-container flex flex-col items-center justify-center min-h-[calc(100vh-4rem)]">
       <div className="w-full max-w-md">
-        <div className="card p-8 md:p-10 backdrop-blur-sm bg-white/95 border-2 border-white/30 shadow-2xl">
+        <div className="card p-8 md:p-10">
           <h1 className="heading-1 text-center mb-2">Welcome back</h1>
           <p className="text-stone-500 text-center mb-8">
             Sign in to hire workers or manage your jobs.

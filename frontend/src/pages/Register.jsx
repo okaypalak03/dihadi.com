@@ -40,7 +40,7 @@ const Register = () => {
   return (
     <div className="page-container py-12">
       <div className="max-w-md mx-auto">
-        <div className="card p-8 md:p-10 backdrop-blur-sm bg-white/95 border-2 border-white/30 shadow-2xl">
+        <div className="card p-8 md:p-10">
           <h1 className="heading-1 text-center mb-2">Create account</h1>
           <p className="text-stone-500 text-center mb-8">
             Join Dihadi.com as a user or worker.
