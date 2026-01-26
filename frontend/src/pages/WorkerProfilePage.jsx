@@ -75,14 +75,15 @@ const WorkerProfilePage = () => {
 
   return (
     <div className="page-container">
-      <header className="mb-10">
-        <h1 className="heading-1 mb-2">Update Worker Profile</h1>
-        <p className="text-stone-600">
-          Update your work category, timing, and charges.
-        </p>
-      </header>
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <header className="mb-10 text-center w-full">
+          <h1 className="heading-1 mb-2">Update Worker Profile</h1>
+          <p className="text-stone-600">
+            Update your work category, timing, and charges.
+          </p>
+        </header>
 
-      <div className="card p-6 max-w-2xl">
+        <div className="card p-6 w-full max-w-2xl">
         <form onSubmit={handleProfileSubmit} className="space-y-4">
           <div>
             <label htmlFor="category" className="input-label">
@@ -150,6 +151,7 @@ const WorkerProfilePage = () => {
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );
