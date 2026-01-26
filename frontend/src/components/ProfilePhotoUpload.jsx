@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { useToast } from '../context/ToastContext.jsx';
 
 const MAX_SIZE_KB = 200;
 const ACCEPT = 'image/jpeg,image/png,image/webp';
@@ -10,11 +11,11 @@ const ProfilePhotoUpload = ({ profilePhoto, name, onUpdate, disabled }) => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      alert('Please choose an image (JPEG, PNG, or WebP).');
+      toast.error('Please choose an image (JPEG, PNG, or WebP).');
       return;
     }
     if (file.size > MAX_SIZE_KB * 1024) {
-      alert(`Image must be under ${MAX_SIZE_KB} KB.`);
+      toast.error(`Image must be under ${MAX_SIZE_KB} KB.`);
       return;
     }
     const reader = new FileReader();

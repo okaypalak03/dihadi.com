@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
 import HowToUse from '../components/HowToUse.jsx';
 
 const Register = () => {
@@ -14,6 +15,7 @@ const Register = () => {
     contactNumber: '',
   });
   const { register } = useContext(AuthContext);
+  const toast = useToast();
   const navigate = useNavigate();
 
   const { name, email, password, role, address, area, contactNumber } = formData;
@@ -28,7 +30,7 @@ const Register = () => {
       navigate('/');
     } catch (error) {
       console.error('Registration failed', error);
-      alert('Registration failed');
+      toast.error(error?.response?.data?.msg || 'Registration failed. Please try again.');
     }
   };
 

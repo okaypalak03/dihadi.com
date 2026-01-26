@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
 import ProfilePhotoUpload from '../components/ProfilePhotoUpload.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
 import { handleCurrencyInputChange, handleTimeInputChange } from '../utils/inputFormatters.js';
@@ -23,6 +24,7 @@ const WorkerDashboard = () => {
     contactNumber: '',
   });
   const { user, setUser } = useContext(AuthContext);
+  const toast = useToast();
   const location = useLocation();
   const token = () => localStorage.getItem('token');
   const headers = () => ({ 'x-auth-token': token() });
@@ -118,10 +120,10 @@ const WorkerDashboard = () => {
     e.preventDefault();
     try {
       await axios.post(`${API_BASE}/workers`, profile, { headers: headers() });
-      alert('Profile updated successfully!');
+      toast.success('Profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Failed to update profile.');
+      toast.error('Failed to update profile.');
     }
   };
 
@@ -131,10 +133,10 @@ const WorkerDashboard = () => {
       const { data } = await axios.put(`${API_BASE}/users/profile`, personal, { headers: headers() });
       setUser(data);
       setShowPersonalForm(false);
-      alert('Personal details updated successfully!');
+      toast.success('Personal details updated successfully!');
     } catch (error) {
       console.error('Error updating personal details:', error);
-      alert('Failed to update personal details.');
+      toast.error('Failed to update personal details.');
     }
   };
 
@@ -146,10 +148,10 @@ const WorkerDashboard = () => {
         { headers: headers() }
       );
       setUser(data);
-      alert(base64OrNull ? 'Profile photo updated!' : 'Profile photo removed.');
+      toast.success(base64OrNull ? 'Profile photo updated!' : 'Profile photo removed.');
     } catch (error) {
       console.error('Error updating profile photo:', error);
-      alert('Failed to update profile photo.');
+      toast.error('Failed to update profile photo.');
     }
   };
 

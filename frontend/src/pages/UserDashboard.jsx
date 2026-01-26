@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
 import ProfilePhotoUpload from '../components/ProfilePhotoUpload.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
 import API_BASE from '../config/api.js';
@@ -17,6 +18,7 @@ const UserDashboard = () => {
     contactNumber: '',
   });
   const { user, setUser } = useContext(AuthContext);
+  const toast = useToast();
   const location = useLocation();
   const token = () => localStorage.getItem('token');
   const headers = () => ({ 'x-auth-token': token() });
@@ -64,10 +66,10 @@ const UserDashboard = () => {
       const { data } = await axios.put(`${API_BASE}/users/profile`, profile, { headers: headers() });
       setUser(data);
       setShowProfileForm(false);
-      alert('Profile updated successfully!');
+      toast.success('Profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('Failed to update profile.');
+      toast.error('Failed to update profile.');
     }
   };
 
@@ -79,10 +81,10 @@ const UserDashboard = () => {
         { headers: headers() }
       );
       setUser(data);
-      alert(base64OrNull ? 'Profile photo updated!' : 'Profile photo removed.');
+      toast.success(base64OrNull ? 'Profile photo updated!' : 'Profile photo removed.');
     } catch (error) {
       console.error('Error updating profile photo:', error);
-      alert('Failed to update profile photo.');
+      toast.error('Failed to update profile photo.');
     }
   };
 

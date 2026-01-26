@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
+import { useToast } from '../context/ToastContext.jsx';
 import HowToUse from '../components/HowToUse.jsx';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { login } = useContext(AuthContext);
+  const toast = useToast();
   const navigate = useNavigate();
 
   const { email, password } = formData;
@@ -20,7 +22,7 @@ const Login = () => {
       navigate('/');
     } catch (error) {
       console.error('Login failed', error);
-      alert('Login failed');
+      toast.error('Login failed. Please check your email and password.');
     }
   };
 
