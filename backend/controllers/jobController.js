@@ -201,3 +201,66 @@ export const deleteJob = async (req, res) => {
     res.status(500).send('Server error');
   }
 };
+
+export const submitRating = async (req, res) => {
+  const { rating, ratingComment } = req.body;
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(req.user.id);
+    if (user.role !== 'User') {
+      return res.status(401).json({ msg: 'Only users can submit ratings' });
+    }
+
+    const job = await Job.findById(id);
+    if (!job) {
+      return res.status(404).json({ msg: 'Job not found' });
+    }
+
+    if (job.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'Not authorized' });
+    }
+
+    if (job.status !== 'Completed') {
+      return res.status(400).json({ msg: 'Can only rate completed jobs' });
+    }
+
+    if (rating < 1 || rating > 5) {
+      return res.status(400).json({ msg: 'Rating must be between 1 and 5' });
+    }
+
+    job.rating = rating;
+    job.ratingComment = ratingComment || null;
+
+    await job.save();
+
+    // Update worker's average rating
+    const worker = await Worker.findById(job.worker);
+    if (worker) {
+      const completedJobs = await Job.find({
+        worker: worker._id,
+        status: 'Completed',
+        rating: { $ne: null },
+      });
+
+      const totalRatings = completedJobs.length;
+      const sumRatings = completedJobs.reduce((sum, j) => sum + (j.rating || 0), 0);
+      worker.averageRating = totalRatings > 0 ? sumRatings / totalRatings : 0;
+      worker.totalRatings = totalRatings;
+
+      await worker.save();
+    }
+
+    const updatedJob = await Job.findById(id)
+      .populate('user', 'name email')
+      .populate({
+        path: 'worker',
+        populate: { path: 'user', select: 'name' },
+      });
+
+    res.json(updatedJob);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
