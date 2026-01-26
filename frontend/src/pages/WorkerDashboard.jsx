@@ -154,8 +154,6 @@ const WorkerDashboard = () => {
                 </div>
               ))
             )}
-          </div>
-        </div>
       </div>
 
       <ConfirmModal
