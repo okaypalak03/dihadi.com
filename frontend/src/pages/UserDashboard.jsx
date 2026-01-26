@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
-import ProfilePhotoUpload from '../components/ProfilePhotoUpload.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
 import RatingModal from '../components/RatingModal.jsx';
 import ChatModal from '../components/ChatModal.jsx';
@@ -12,25 +11,13 @@ import API_BASE from '../config/api.js';
 
 const UserDashboard = () => {
   const [jobs, setJobs] = useState([]);
-  const [showProfileForm, setShowProfileForm] = useState(false);
   const [removeModalJobId, setRemoveModalJobId] = useState(null);
   const [ratingModalJobId, setRatingModalJobId] = useState(null);
   const [chatModalJobId, setChatModalJobId] = useState(null);
-  const [profile, setProfile] = useState({
-    name: '',
-    address: '',
-    area: '',
-    contactNumber: '',
-  });
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const toast = useToast();
-  const location = useLocation();
   const token = () => localStorage.getItem('token');
   const headers = () => ({ 'x-auth-token': token() });
-
-  useEffect(() => {
-    if (location.state?.openProfile) setShowProfileForm(true);
-  }, [location.state?.openProfile]);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -42,56 +29,9 @@ const UserDashboard = () => {
         console.error('Error fetching jobs:', error);
       }
     };
-    const fetchUserProfile = async () => {
-      if (!user) return;
-      try {
-        const { data } = await axios.get(`${API_BASE}/auth/me`, { headers: headers() });
-        setProfile({
-          name: data.name || '',
-          address: data.address || '',
-          area: data.area || '',
-          contactNumber: data.contactNumber || '',
-        });
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-      }
-    };
 
     fetchJobs();
-    fetchUserProfile();
   }, [user]);
-
-  const handleProfileChange = (e) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
-  };
-
-  const handleProfileSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const { data } = await axios.put(`${API_BASE}/users/profile`, profile, { headers: headers() });
-      setUser(data);
-      setShowProfileForm(false);
-      toast.success('Profile updated successfully!');
-    } catch (error) {
-      console.error('Error updating profile:', error);
-      toast.error('Failed to update profile.');
-    }
-  };
-
-  const handlePhotoUpdate = async (base64OrNull) => {
-    try {
-      const { data } = await axios.put(
-        `${API_BASE}/users/profile`,
-        { profilePhoto: base64OrNull ?? null },
-        { headers: headers() }
-      );
-      setUser(data);
-      toast.success(base64OrNull ? 'Profile photo updated!' : 'Profile photo removed.');
-    } catch (error) {
-      console.error('Error updating profile photo:', error);
-      toast.error('Failed to update profile photo.');
-    }
-  };
 
   const handleRemoveJobClick = (jobId) => setRemoveModalJobId(jobId);
 
@@ -129,91 +69,11 @@ const UserDashboard = () => {
   return (
     <div className="page-container">
       <header className="mb-10">
-        <div className="flex items-center justify-between mb-2">
-          <h1 className="heading-1">My hiring requests</h1>
-          <button
-            onClick={() => setShowProfileForm(!showProfileForm)}
-            className="btn-secondary text-sm"
-          >
-            {showProfileForm ? 'Cancel' : 'Update Profile'}
-          </button>
-        </div>
+        <h1 className="heading-1 mb-2">My hiring requests</h1>
         <p className="text-stone-600">
-          Track your job requests and manage your profile.
+          Track your job requests and manage your hiring.
         </p>
       </header>
-
-      {showProfileForm && (
-        <div className="card p-6 mb-8">
-          <h2 className="heading-2 mb-4">Update Personal Details</h2>
-          <form onSubmit={handleProfileSubmit} className="space-y-4">
-            <div className="flex flex-col items-center pb-4 border-b border-amber-100">
-              <ProfilePhotoUpload
-                profilePhoto={user?.profilePhoto}
-                name={profile.name || user?.name}
-                onUpdate={handlePhotoUpdate}
-              />
-            </div>
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-stone-700 mb-1.5">
-                Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                value={profile.name}
-                onChange={handleProfileChange}
-                placeholder="Your name"
-                required
-                className="input-field"
-              />
-            </div>
-            <div>
-              <label htmlFor="address" className="block text-sm font-medium text-stone-700 mb-1.5">
-                Address
-              </label>
-              <input
-                id="address"
-                name="address"
-                value={profile.address}
-                onChange={handleProfileChange}
-                placeholder="Your address"
-                className="input-field"
-              />
-            </div>
-            <div>
-              <label htmlFor="area" className="block text-sm font-medium text-stone-700 mb-1.5">
-                Area
-              </label>
-              <input
-                id="area"
-                name="area"
-                value={profile.area}
-                onChange={handleProfileChange}
-                placeholder="e.g. Patna, Gaya"
-                required
-                className="input-field"
-              />
-            </div>
-            <div>
-              <label htmlFor="contactNumber" className="block text-sm font-medium text-stone-700 mb-1.5">
-                Contact Number
-              </label>
-              <input
-                id="contactNumber"
-                name="contactNumber"
-                value={profile.contactNumber}
-                onChange={handleProfileChange}
-                placeholder="Phone number"
-                className="input-field"
-              />
-            </div>
-            <button type="submit" className="btn-primary">
-              Save Changes
-            </button>
-          </form>
-        </div>
-      )}
 
       <div className="space-y-4">
         {jobs.length === 0 ? (
