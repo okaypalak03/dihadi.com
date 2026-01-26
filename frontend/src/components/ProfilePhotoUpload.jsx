@@ -6,6 +6,7 @@ const ACCEPT = 'image/jpeg,image/png,image/webp';
 
 const ProfilePhotoUpload = ({ profilePhoto, name, onUpdate, disabled }) => {
   const inputRef = useRef(null);
+  const toast = useToast();
 
   const handleFile = (e) => {
     const file = e.target.files?.[0];
