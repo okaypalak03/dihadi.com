@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import ProfilePhotoUpload from '../components/ProfilePhotoUpload.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
+import RatingModal from '../components/RatingModal.jsx';
 import { formatDateTime, formatDate, formatTimeDisplay } from '../utils/inputFormatters.js';
 import API_BASE from '../config/api.js';
 
@@ -12,6 +13,7 @@ const UserDashboard = () => {
   const [jobs, setJobs] = useState([]);
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [removeModalJobId, setRemoveModalJobId] = useState(null);
+  const [ratingModalJobId, setRatingModalJobId] = useState(null);
   const [profile, setProfile] = useState({
     name: '',
     address: '',
@@ -95,6 +97,16 @@ const UserDashboard = () => {
     const jobId = removeModalJobId;
     await axios.delete(`${API_BASE}/jobs/${jobId}`, { headers: headers() });
     setJobs((prev) => prev.filter((j) => j._id !== jobId));
+  };
+
+  const handleRatingSubmitted = async () => {
+    // Refresh jobs to get updated rating
+    try {
+      const { data } = await axios.get(`${API_BASE}/jobs`, { headers: headers() });
+      setJobs(data);
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
+    }
   };
 
   const getStatusStyle = (status) => {
@@ -236,9 +248,15 @@ const UserDashboard = () => {
                     {job.completedAt && <span>Completed: {formatDateTime(job.completedAt)}</span>}
                   </div>
                 </div>
-                <div className="flex flex-wrap gap-3 text-sm text-stone-500">
+                <div className="flex flex-wrap gap-3 text-sm text-stone-500 mb-2">
                   <span>Status: {job.status}</span>
                   <span>Payment: {job.paymentStatus || '—'}</span>
+                  {job.rating && (
+                    <span className="flex items-center gap-1">
+                      <span>⭐</span>
+                      <span className="font-semibold text-amber-600">{job.rating}/5</span>
+                    </span>
+                  )}
                 </div>
               </div>
               <div className="flex flex-wrap items-center gap-3">
@@ -249,6 +267,14 @@ const UserDashboard = () => {
                 >
                   {job.status}
                 </span>
+                {job.status === 'Completed' && !job.rating && (
+                  <button
+                    onClick={() => setRatingModalJobId(job._id)}
+                    className="px-4 py-2 rounded-xl text-sm font-semibold bg-amber-100 text-amber-700 border border-amber-300 hover:bg-amber-200 transition-colors"
+                  >
+                    Rate work
+                  </button>
+                )}
                 <button
                   onClick={() => handleRemoveJobClick(job._id)}
                   className="px-4 py-2 rounded-xl text-sm font-semibold border border-stone-300 text-stone-600 hover:bg-stone-100 hover:border-stone-400 transition-colors"
@@ -271,6 +297,15 @@ const UserDashboard = () => {
         variant="danger"
         onConfirm={handleRemoveJobConfirm}
       />
+
+      {ratingModalJobId && (
+        <RatingModal
+          isOpen={!!ratingModalJobId}
+          onClose={() => setRatingModalJobId(null)}
+          job={jobs.find(j => j._id === ratingModalJobId)}
+          onRatingSubmitted={handleRatingSubmitted}
+        />
+      )}
     </div>
   );
 };

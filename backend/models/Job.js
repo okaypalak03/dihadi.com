@@ -43,15 +43,25 @@ const JobSchema = new mongoose.Schema({
   },
   workDate: {
     type: Date,
-    required: false,
+    required: true,
   },
   workTimeFrom: {
     type: String,
-    required: false,
+    required: true,
   },
   workTimeTo: {
     type: String,
-    required: false,
+    required: true,
+  },
+  rating: {
+    type: Number,
+    min: 1,
+    max: 5,
+    default: null,
+  },
+  ratingComment: {
+    type: String,
+    default: null,
   },
 });
 

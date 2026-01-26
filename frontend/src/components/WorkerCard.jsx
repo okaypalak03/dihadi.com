@@ -69,6 +69,14 @@ const WorkerCard = ({ worker }) => {
           <p className="flex items-center gap-2">
             <span className="text-stone-400">🕐</span> {worker.workTiming || '—'}
           </p>
+          {worker.averageRating > 0 && (
+            <p className="flex items-center gap-2">
+              <span className="text-stone-400">⭐</span>
+              <span className="font-semibold text-amber-600">
+                {worker.averageRating.toFixed(1)} ({worker.totalRatings} {worker.totalRatings === 1 ? 'rating' : 'ratings'})
+              </span>
+            </p>
+          )}
           {worker.user?.contactNumber && (
             <p className="flex items-center gap-2">
               <span className="text-stone-400">📞</span>{' '}

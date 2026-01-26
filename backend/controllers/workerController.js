@@ -16,7 +16,7 @@ export const getWorkerMe = async (req, res) => {
 };
 
 export const getWorkers = async (req, res) => {
-  const { area } = req.query;
+  const { area, workDate, workTimeFrom, workTimeTo } = req.query;
   try {
     const query = {};
     if (area) {
@@ -28,16 +28,48 @@ export const getWorkers = async (req, res) => {
     // Find all workers
     const allWorkers = await Worker.find(query).populate('user', ['name', 'area', 'contactNumber', 'profilePhoto']);
     
-    // Find workers with active jobs (Pending or Accepted)
-    const activeJobs = await Job.find({
-      status: { $in: ['Pending', 'Accepted'] }
-    }).select('worker');
+    // If date/time filters are provided, check for conflicts
+    let busyWorkerIds = new Set();
     
-    const busyWorkerIds = [...new Set(activeJobs.map(job => job.worker.toString()))];
+    if (workDate && workTimeFrom && workTimeTo) {
+      const workDateObj = new Date(workDate);
+      const startOfDay = new Date(workDateObj.setHours(0, 0, 0, 0));
+      const endOfDay = new Date(workDateObj.setHours(23, 59, 59, 999));
+      
+      // Find jobs on the same date with time conflicts
+      const conflictingJobs = await Job.find({
+        status: { $in: ['Pending', 'Accepted'] },
+        workDate: {
+          $gte: startOfDay,
+          $lt: endOfDay,
+        },
+      });
+      
+      // Check for time overlap
+      for (const job of conflictingJobs) {
+        if (job.workTimeFrom && job.workTimeTo) {
+          // Check if time ranges overlap
+          if (
+            (workTimeFrom >= job.workTimeFrom && workTimeFrom < job.workTimeTo) ||
+            (workTimeTo > job.workTimeFrom && workTimeTo <= job.workTimeTo) ||
+            (workTimeFrom <= job.workTimeFrom && workTimeTo >= job.workTimeTo)
+          ) {
+            busyWorkerIds.add(job.worker.toString());
+          }
+        }
+      }
+    } else {
+      // If no date/time provided, filter by any active jobs (old behavior)
+      const activeJobs = await Job.find({
+        status: { $in: ['Pending', 'Accepted'] }
+      }).select('worker');
+      
+      activeJobs.forEach(job => busyWorkerIds.add(job.worker.toString()));
+    }
     
-    // Filter out workers with active jobs
+    // Filter out workers with conflicts
     const availableWorkers = allWorkers.filter(worker => 
-      !busyWorkerIds.includes(worker._id.toString())
+      !busyWorkerIds.has(worker._id.toString())
     );
     
     res.json(availableWorkers);

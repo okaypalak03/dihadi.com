@@ -11,20 +11,60 @@ export const createJob = async (req, res) => {
       return res.status(401).json({ msg: 'Only users can create jobs' });
     }
 
+    // Validate required fields
+    if (!workDate || !workTimeFrom || !workTimeTo) {
+      return res.status(400).json({ msg: 'Work date, time from, and time to are required' });
+    }
+
+    // Check for date/time conflicts with existing jobs
+    const workDateObj = new Date(workDate);
+    const existingJobs = await Job.find({
+      worker: workerId,
+      status: { $in: ['Pending', 'Accepted'] },
+      workDate: {
+        $gte: new Date(workDateObj.setHours(0, 0, 0, 0)),
+        $lt: new Date(workDateObj.setHours(23, 59, 59, 999)),
+      },
+    });
+
+    // Check for time overlap
+    for (const existingJob of existingJobs) {
+      if (existingJob.workTimeFrom && existingJob.workTimeTo) {
+        // Check if time ranges overlap
+        if (
+          (workTimeFrom >= existingJob.workTimeFrom && workTimeFrom < existingJob.workTimeTo) ||
+          (workTimeTo > existingJob.workTimeFrom && workTimeTo <= existingJob.workTimeTo) ||
+          (workTimeFrom <= existingJob.workTimeFrom && workTimeTo >= existingJob.workTimeTo)
+        ) {
+          return res.status(409).json({
+            msg: 'Worker is already busy during this time slot. Please choose a different date or time.',
+            conflict: {
+              date: existingJob.workDate,
+              timeFrom: existingJob.workTimeFrom,
+              timeTo: existingJob.workTimeTo,
+            },
+          });
+        }
+      }
+    }
+
     const newJob = new Job({
       user: req.user.id,
       worker: workerId,
       description,
       requiredTime,
-      workDate: workDate ? new Date(workDate) : null,
-      workTimeFrom: workTimeFrom || null,
-      workTimeTo: workTimeTo || null,
+      workDate: new Date(workDate),
+      workTimeFrom,
+      workTimeTo,
     });
 
     const job = await newJob.save();
     res.json(job);
   } catch (err) {
     console.error(err.message);
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({ msg: err.message });
+    }
     res.status(500).send('Server error');
   }
 };
