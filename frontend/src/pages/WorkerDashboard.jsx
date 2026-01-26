@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import ProfilePhotoUpload from '../components/ProfilePhotoUpload.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
-import { handleCurrencyInputChange, handleTimeInputChange } from '../utils/inputFormatters.js';
+import { handleCurrencyInputChange, handleTimeInputChange, formatDateTime, formatDate, formatTimeDisplay } from '../utils/inputFormatters.js';
 import API_BASE from '../config/api.js';
 
 const WorkerDashboard = () => {
@@ -288,7 +288,25 @@ const WorkerDashboard = () => {
             ) : (
               jobs.map((job) => (
                 <div key={job._id} className="card p-6">
-                  <p className="text-stone-800 font-medium mb-3">{job.description}</p>
+                  <p className="text-stone-800 font-medium mb-2">{job.description}</p>
+                  <div className="space-y-1.5 text-sm text-stone-600 mb-3">
+                    {job.workDate && (
+                      <p className="flex items-center gap-2">
+                        <span className="text-stone-400">📅</span>
+                        <span>Work date: {formatDate(job.workDate)}</span>
+                        {job.workTimeFrom && job.workTimeTo && (
+                          <span className="text-stone-500">
+                            ({formatTimeDisplay(job.workTimeFrom)} - {formatTimeDisplay(job.workTimeTo)})
+                          </span>
+                        )}
+                      </p>
+                    )}
+                    <div className="flex flex-wrap gap-3 text-xs text-stone-500">
+                      <span>Request sent: {formatDateTime(job.createdAt)}</span>
+                      {job.acceptedAt && <span>Accepted: {formatDateTime(job.acceptedAt)}</span>}
+                      {job.completedAt && <span>Completed: {formatDateTime(job.completedAt)}</span>}
+                    </div>
+                  </div>
                   <div className="flex flex-wrap items-center justify-between gap-4">
                     <span
                       className={`px-4 py-2 rounded-xl text-sm font-semibold border ${getStatusStyle(

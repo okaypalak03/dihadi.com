@@ -3,7 +3,7 @@ import User from '../models/User.js';
 import Worker from '../models/Worker.js';
 
 export const createJob = async (req, res) => {
-  const { workerId, description, requiredTime } = req.body;
+  const { workerId, description, requiredTime, workDate, workTimeFrom, workTimeTo } = req.body;
 
   try {
     const user = await User.findById(req.user.id);
@@ -16,6 +16,9 @@ export const createJob = async (req, res) => {
       worker: workerId,
       description,
       requiredTime,
+      workDate: workDate ? new Date(workDate) : null,
+      workTimeFrom: workTimeFrom || null,
+      workTimeTo: workTimeTo || null,
     });
 
     const job = await newJob.save();
@@ -97,13 +100,21 @@ export const updateJobStatus = async (req, res) => {
     }
 
 
+    const oldStatus = job.status;
     job.status = status || job.status;
 
-    // Mock payment flow
-    if(status === 'Completed'){
-        job.paymentStatus = 'Paid';
+    // Set timestamps based on status changes
+    if (status === 'Accepted' && oldStatus !== 'Accepted') {
+      job.acceptedAt = new Date();
     }
-
+    if (status === 'Completed' && oldStatus !== 'Completed') {
+      job.completedAt = new Date();
+      job.paymentStatus = 'Paid';
+    }
+    if (status === 'Rejected' && oldStatus === 'Accepted') {
+      // If worker rejects after accepting, clear acceptedAt
+      job.acceptedAt = null;
+    }
 
     await job.save();
     

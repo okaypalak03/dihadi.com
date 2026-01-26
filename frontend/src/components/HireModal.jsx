@@ -3,12 +3,18 @@ import React, { useState, useEffect, useCallback } from 'react';
 const HireModal = ({ isOpen, onClose, workerName, onSubmit, loading }) => {
   const [description, setDescription] = useState('');
   const [requiredTime, setRequiredTime] = useState('');
+  const [workDate, setWorkDate] = useState('');
+  const [workTimeFrom, setWorkTimeFrom] = useState('');
+  const [workTimeTo, setWorkTimeTo] = useState('');
   const [message, setMessage] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const reset = () => {
     setDescription('');
     setRequiredTime('');
+    setWorkDate('');
+    setWorkTimeFrom('');
+    setWorkTimeTo('');
     setMessage(null);
     setIsSuccess(false);
   };
@@ -35,11 +41,20 @@ const HireModal = ({ isOpen, onClose, workerName, onSubmit, loading }) => {
       return;
     }
     try {
-      await onSubmit({ description: description.trim(), requiredTime: requiredTime.trim() });
+      await onSubmit({
+        description: description.trim(),
+        requiredTime: requiredTime.trim(),
+        workDate: workDate || null,
+        workTimeFrom: workTimeFrom.trim() || null,
+        workTimeTo: workTimeTo.trim() || null,
+      });
       setIsSuccess(true);
       setMessage({ type: 'success', text: 'Hiring request sent! The worker will respond shortly.' });
       setDescription('');
       setRequiredTime('');
+      setWorkDate('');
+      setWorkTimeFrom('');
+      setWorkTimeTo('');
       setTimeout(handleClose, 1500);
     } catch (err) {
       setMessage({
@@ -105,6 +120,48 @@ const HireModal = ({ isOpen, onClose, workerName, onSubmit, loading }) => {
               className="input-field"
               disabled={loading || isSuccess}
             />
+          </div>
+          <div>
+            <label htmlFor="hire-date" className="hire-modal-label">
+              Work date (optional)
+            </label>
+            <input
+              id="hire-date"
+              type="date"
+              value={workDate}
+              onChange={(e) => setWorkDate(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+              className="input-field"
+              disabled={loading || isSuccess}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="hire-time-from" className="hire-modal-label">
+                Time from (optional)
+              </label>
+              <input
+                id="hire-time-from"
+                type="time"
+                value={workTimeFrom}
+                onChange={(e) => setWorkTimeFrom(e.target.value)}
+                className="input-field"
+                disabled={loading || isSuccess}
+              />
+            </div>
+            <div>
+              <label htmlFor="hire-time-to" className="hire-modal-label">
+                Time to (optional)
+              </label>
+              <input
+                id="hire-time-to"
+                type="time"
+                value={workTimeTo}
+                onChange={(e) => setWorkTimeTo(e.target.value)}
+                className="input-field"
+                disabled={loading || isSuccess}
+              />
+            </div>
           </div>
 
           {message && (

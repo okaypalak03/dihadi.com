@@ -12,13 +12,13 @@ const WorkerCard = ({ worker }) => {
   const photo = worker.user?.profilePhoto;
   const initial = worker.user?.name?.trim().charAt(0).toUpperCase() || '?';
 
-  const handleHireSubmit = async ({ description, requiredTime }) => {
+  const handleHireSubmit = async ({ description, requiredTime, workDate, workTimeFrom, workTimeTo }) => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
       await axios.post(
         `${API_BASE}/jobs`,
-        { workerId: worker._id, description, requiredTime },
+        { workerId: worker._id, description, requiredTime, workDate, workTimeFrom, workTimeTo },
         { headers: { 'x-auth-token': token } }
       );
     } catch (err) {

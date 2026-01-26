@@ -29,9 +29,29 @@ const JobSchema = new mongoose.Schema({
     enum: ['Pending', 'Paid'],
     default: 'Pending',
   },
-  date: {
+  createdAt: {
     type: Date,
     default: Date.now,
+  },
+  acceptedAt: {
+    type: Date,
+    default: null,
+  },
+  completedAt: {
+    type: Date,
+    default: null,
+  },
+  workDate: {
+    type: Date,
+    required: false,
+  },
+  workTimeFrom: {
+    type: String,
+    required: false,
+  },
+  workTimeTo: {
+    type: String,
+    required: false,
   },
 });
 

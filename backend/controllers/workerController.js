@@ -1,5 +1,6 @@
 import Worker from '../models/Worker.js';
 import User from '../models/User.js';
+import Job from '../models/Job.js';
 
 export const getWorkerMe = async (req, res) => {
   try {
@@ -23,8 +24,23 @@ export const getWorkers = async (req, res) => {
       const userIds = usersInArea.map(user => user._id);
       query.user = { $in: userIds };
     }
-    const workers = await Worker.find(query).populate('user', ['name', 'area', 'contactNumber', 'profilePhoto']);
-    res.json(workers);
+    
+    // Find all workers
+    const allWorkers = await Worker.find(query).populate('user', ['name', 'area', 'contactNumber', 'profilePhoto']);
+    
+    // Find workers with active jobs (Pending or Accepted)
+    const activeJobs = await Job.find({
+      status: { $in: ['Pending', 'Accepted'] }
+    }).select('worker');
+    
+    const busyWorkerIds = [...new Set(activeJobs.map(job => job.worker.toString()))];
+    
+    // Filter out workers with active jobs
+    const availableWorkers = allWorkers.filter(worker => 
+      !busyWorkerIds.includes(worker._id.toString())
+    );
+    
+    res.json(availableWorkers);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

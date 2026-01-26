@@ -102,3 +102,37 @@ export const handleCurrencyInputChange = (e, setValue) => {
   const formatted = formatCurrency(input);
   setValue(formatted);
 };
+
+// Format date-time for display
+export const formatDateTime = (dateString) => {
+  if (!dateString) return '—';
+  const date = new Date(dateString);
+  return date.toLocaleString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+};
+
+// Format date only for display
+export const formatDate = (dateString) => {
+  if (!dateString) return '—';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+};
+
+// Format time string (HH:MM) to 12-hour format
+export const formatTimeDisplay = (timeString) => {
+  if (!timeString) return '—';
+  // timeString is in HH:MM format
+  const [hours, minutes] = timeString.split(':');
+  const hour12 = hours % 12 || 12;
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  return `${hour12}:${minutes} ${ampm}`;
+};
