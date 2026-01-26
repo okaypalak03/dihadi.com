@@ -21,6 +21,12 @@ const Navbar = () => {
           <div className="flex items-center gap-2 md:gap-4">
             {user ? (
               <>
+                <Link
+                  to="/workers"
+                  className="px-4 py-2 rounded-xl font-medium text-stone-600 hover:bg-amber-100 hover:text-orange-600 transition-colors"
+                >
+                  Find Workers
+                </Link>
                 {(user.role === 'User' || user.role === 'Worker' || user.role === 'Admin') && (
                   <Link
                     to={

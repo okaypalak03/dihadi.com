@@ -6,6 +6,7 @@ import { useToast } from '../context/ToastContext.jsx';
 import ProfilePhotoUpload from '../components/ProfilePhotoUpload.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
 import RatingModal from '../components/RatingModal.jsx';
+import ChatModal from '../components/ChatModal.jsx';
 import { formatDateTime, formatDate, formatTimeDisplay } from '../utils/inputFormatters.js';
 import API_BASE from '../config/api.js';
 
@@ -14,6 +15,7 @@ const UserDashboard = () => {
   const [showProfileForm, setShowProfileForm] = useState(false);
   const [removeModalJobId, setRemoveModalJobId] = useState(null);
   const [ratingModalJobId, setRatingModalJobId] = useState(null);
+  const [chatModalJobId, setChatModalJobId] = useState(null);
   const [profile, setProfile] = useState({
     name: '',
     address: '',
@@ -267,6 +269,14 @@ const UserDashboard = () => {
                 >
                   {job.status}
                 </span>
+                {(job.status === 'Accepted' || job.status === 'Completed') && (
+                  <button
+                    onClick={() => setChatModalJobId(job._id)}
+                    className="px-4 py-2 rounded-xl text-sm font-semibold bg-teal-100 text-teal-700 border border-teal-300 hover:bg-teal-200 transition-colors"
+                  >
+                    💬 Chat
+                  </button>
+                )}
                 {job.status === 'Completed' && !job.rating && (
                   <button
                     onClick={() => setRatingModalJobId(job._id)}
@@ -304,6 +314,15 @@ const UserDashboard = () => {
           onClose={() => setRatingModalJobId(null)}
           job={jobs.find(j => j._id === ratingModalJobId)}
           onRatingSubmitted={handleRatingSubmitted}
+        />
+      )}
+
+      {chatModalJobId && (
+        <ChatModal
+          isOpen={!!chatModalJobId}
+          onClose={() => setChatModalJobId(null)}
+          job={jobs.find(j => j._id === chatModalJobId)}
+          currentUser={user}
         />
       )}
     </div>

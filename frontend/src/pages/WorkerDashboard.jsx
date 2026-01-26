@@ -5,6 +5,7 @@ import { AuthContext } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import ProfilePhotoUpload from '../components/ProfilePhotoUpload.jsx';
 import ConfirmModal from '../components/ConfirmModal.jsx';
+import ChatModal from '../components/ChatModal.jsx';
 import { handleCurrencyInputChange, handleTimeInputChange, formatDateTime, formatDate, formatTimeDisplay } from '../utils/inputFormatters.js';
 import API_BASE from '../config/api.js';
 
@@ -17,6 +18,7 @@ const WorkerDashboard = () => {
   });
   const [showPersonalForm, setShowPersonalForm] = useState(false);
   const [removeModalJobId, setRemoveModalJobId] = useState(null);
+  const [chatModalJobId, setChatModalJobId] = useState(null);
   const [personal, setPersonal] = useState({
     name: '',
     address: '',
@@ -332,6 +334,14 @@ const WorkerDashboard = () => {
                           </button>
                         </>
                       )}
+                      {(job.status === 'Accepted' || job.status === 'Pending') && (
+                        <button
+                          onClick={() => setChatModalJobId(job._id)}
+                          className="px-4 py-2 rounded-xl text-sm font-semibold bg-teal-100 text-teal-700 border border-teal-300 hover:bg-teal-200 transition-colors"
+                        >
+                          💬 Chat
+                        </button>
+                      )}
                       {job.status === 'Accepted' && (
                         <button
                           onClick={() => handleStatusChange(job._id, 'Completed')}
@@ -365,6 +375,15 @@ const WorkerDashboard = () => {
         variant="danger"
         onConfirm={handleRemoveJobConfirm}
       />
+
+      {chatModalJobId && (
+        <ChatModal
+          isOpen={!!chatModalJobId}
+          onClose={() => setChatModalJobId(null)}
+          job={jobs.find(j => j._id === chatModalJobId)}
+          currentUser={user}
+        />
+      )}
     </div>
   );
 };

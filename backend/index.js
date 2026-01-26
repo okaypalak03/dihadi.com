@@ -6,7 +6,8 @@ import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import workerRoutes from './routes/workers.js';
 import jobRoutes from './routes/jobs.js';
-import adminRoutes from './routes/adminRoutes.js'; // Import admin routes
+import adminRoutes from './routes/adminRoutes.js';
+import chatRoutes from './routes/chats.js';
 
 dotenv.config();
 
@@ -24,7 +25,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/workers', workerRoutes);
 app.use('/api/jobs', jobRoutes);
-app.use('/api/admin', adminRoutes); // Use admin routes
+app.use('/api/admin', adminRoutes);
+app.use('/api/chats', chatRoutes);
 
 const PORT = process.env.PORT || 5000;
 
