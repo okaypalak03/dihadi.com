@@ -6,6 +6,8 @@ import Register from "./pages/Register";
 import WorkerDashboard from "./pages/WorkerDashboard";
 import UserDashboard from "./pages/UserDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
+import PersonalDetailsPage from "./pages/PersonalDetailsPage";
+import WorkerProfilePage from "./pages/WorkerProfilePage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
@@ -45,6 +47,24 @@ function App() {
               element={
                 <PrivateRoute roles={["Admin"]}>
                   <AdminDashboard />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/personal-details"
+              element={
+                <PrivateRoute roles={["User", "Worker", "Admin"]}>
+                  <PersonalDetailsPage />
+                </PrivateRoute>
+              }
+            />
+
+            <Route
+              path="/worker-profile"
+              element={
+                <PrivateRoute roles={["Worker"]}>
+                  <WorkerProfilePage />
                 </PrivateRoute>
               }
             />

@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext.jsx';
-import PersonalDetailsModal from './PersonalDetailsModal.jsx';
-import WorkerProfileModal from './WorkerProfileModal.jsx';
 
 const ProfileDropdown = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showPersonalModal, setShowPersonalModal] = useState(false);
-  const [showWorkerModal, setShowWorkerModal] = useState(false);
   const dropdownRef = useRef(null);
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -35,12 +31,12 @@ const ProfileDropdown = ({ user }) => {
   };
 
   const handlePersonalDetails = () => {
-    setShowPersonalModal(true);
+    navigate('/personal-details');
     setIsOpen(false);
   };
 
   const handleWorkerProfile = () => {
-    setShowWorkerModal(true);
+    navigate('/worker-profile');
     setIsOpen(false);
   };
 
@@ -90,20 +86,6 @@ const ProfileDropdown = ({ user }) => {
           </div>
         )}
       </div>
-
-      {showPersonalModal && (
-        <PersonalDetailsModal
-          isOpen={showPersonalModal}
-          onClose={() => setShowPersonalModal(false)}
-        />
-      )}
-
-      {showWorkerModal && user.role === 'Worker' && (
-        <WorkerProfileModal
-          isOpen={showWorkerModal}
-          onClose={() => setShowWorkerModal(false)}
-        />
-      )}
     </>
   );
 };
